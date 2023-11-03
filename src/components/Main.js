@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "./Table";
+import MatTable from "./MaterialTable";
 
 function Main() {
   const [error, setError] = useState(null);
@@ -38,10 +39,11 @@ function Main() {
       })
       .catch((error) => console.log("error", error));
   }, []);
+  
 
   return (
     <div>
-      <Table items={items} />
+      <MatTable props={items}></MatTable>
     </div>
   );
 }
