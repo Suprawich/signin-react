@@ -4,13 +4,15 @@ import Table from "./Table";
 import MatTable from "./MaterialTable";
 
 function Main() {
+  const [token, setToken] = useState(null);
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("token");
-
+    /* console.log("Token from localStorage:", token);*/
+    setToken(token);
     if (!token) {
       setError("No token found");
       navigate("/signin");
@@ -39,11 +41,10 @@ function Main() {
       })
       .catch((error) => console.log("error", error));
   }, []);
-  
 
   return (
     <div>
-      <MatTable props={items}></MatTable>
+      <MatTable props={items} props2={token}></MatTable>
     </div>
   );
 }
