@@ -116,6 +116,7 @@ function CustomMaterialTable({ props, props2 }) {
           data={data}
           options={{
             columnsButton: true,
+            tableLayout: "auto",
           }}
           editable={{
             onRowAddCancelled: (rowData) => {

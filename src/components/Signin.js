@@ -16,7 +16,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { IconButton, InputAdornment } from "@mui/material";
+import { IconButton, InputAdornment, CloseIcon } from "@mui/material";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 function Copyright(props) {
   return (
@@ -57,6 +59,29 @@ function SignIn() {
     </InputAdornment>
   );
 
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
+  const [open, setOpen] = React.useState(false);
+  const [alertSeverity, setAlertSeverity] = React.useState("");
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+
+  const handleAlert = (severity) => {
+    setAlertSeverity(severity); // Update the alertSeverity state with the provided severity
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     var myHeaders = new Headers();
@@ -80,10 +105,14 @@ function SignIn() {
         console.log(result);
         if (result.token) {
           localStorage.setItem("token", result.token);
+          handleClick(); 
+          handleAlert("success");
           navigate("/main");
         } else {
+          handleAlert("warning") // เรียก handleClick และส่ง "warning" เพื่อแสดง Snackbar สำหรับผลลัพธ์ที่ไม่ถูกต้อง
         }
       })
+
       .catch((error) => console.log("error", error));
     const data = new FormData(event.currentTarget);
     console.log({
@@ -152,9 +181,22 @@ function SignIn() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={handleClick}
             >
               Sign In
             </Button>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+              <Alert
+                onClose={handleClose}
+                severity={alertSeverity}
+                sx={{ width: "100%" }}
+              >
+                {alertSeverity === "success"
+                  ? "Login successful!"
+                  : "Invalid credentials. Please try again."}
+              </Alert>
+            </Snackbar>
+
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
