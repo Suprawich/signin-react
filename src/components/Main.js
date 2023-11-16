@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "./Table";
 import MatTable from "./MaterialTable";
+import Credit from "./Credit";
 
 function Main() {
   const [token, setToken] = useState(null);
@@ -44,6 +45,7 @@ function Main() {
 
   return (
     <div>
+      <Credit></Credit>
       <MatTable props={items} props2={token}></MatTable>
     </div>
   );
