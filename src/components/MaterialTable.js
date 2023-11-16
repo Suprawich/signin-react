@@ -22,6 +22,8 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import momentTimezone from "moment-timezone";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 function CustomMaterialTable({ props, props2 }) {
   const tableIcons = {
@@ -98,6 +100,20 @@ function CustomMaterialTable({ props, props2 }) {
   const defaultMaterialTheme = createTheme();
   const [token, setToken] = useState(null);
 
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success", // "success" or "error"
+  });
+
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setSnackbar((prev) => ({ ...prev, open: false }));
+  };
+
   useEffect(() => {
     setToken(props2); // Check if `props2` is the correct value to use
   }, [props2]); // Only include props2 if it's used inside the effect
@@ -105,6 +121,14 @@ function CustomMaterialTable({ props, props2 }) {
   useEffect(() => {
     setData(props);
   }, [props]);
+
+  const handleSnackbar = (message, severity) => {
+    setSnackbar({
+      open: true,
+      message,
+      severity,
+    });
+  };
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
@@ -139,14 +163,21 @@ function CustomMaterialTable({ props, props2 }) {
                       when: newRowDate,
                     }),
                   })
-                    .then((response) => response.json()) // Parse the JSON response
+                    .then((response) => {
+                      if (!response.ok) {
+                        throw new Error("Error adding row");
+                      }
+                      return response.json();
+                    }) // Parse the JSON response
                     .then((responseData) => {
                       // Assuming the server returns the new data, including the ID
                       newData.id = responseData.id;
                       setData([...data, newData]);
+                      handleSnackbar("Row added successfully", "success");
                     })
                     .catch((error) => {
                       console.error("Error:", error);
+                      handleSnackbar("Error adding row", "error");
                       reject();
                     });
                   resolve();
@@ -173,7 +204,16 @@ function CustomMaterialTable({ props, props2 }) {
                       }),
                     }
                   )
-                    .then((response) => response.json())
+                  .then((response) => {
+                    if (!response.ok) {
+                      handleSnackbar("Error updating row", "error");
+                      throw new Error("Error updating row");
+                    }
+                    else{
+                      handleSnackbar("Row updated successfully", "success");
+                    }
+                    return response.json();
+                  })
                     .catch((error) => {
                       console.error("Error:", error);
                       reject();
@@ -182,31 +222,53 @@ function CustomMaterialTable({ props, props2 }) {
                 }, 1000);
               }),
 
-            onRowDelete: (oldData) =>
+              onRowDelete: (oldData) =>
               new Promise((resolve, reject) => {
                 setTimeout(() => {
                   const dataDelete = [...data];
                   const index = oldData.tableData.id;
                   dataDelete.splice(index, 1);
                   setData([...dataDelete]);
-                  fetch(
-                    `https://cache111.com/todoapi/activities/${oldData.id}`,
-                    {
-                      method: "DELETE",
-                      headers: {
-                        Authorization: `Bearer ${token}`,
-                      },
-                    }
-                  ).catch((error) => {
-                    console.error("Error:", error);
-                    reject();
-                  });
-                  resolve();
+                  fetch(`https://cache111.com/todoapi/activities/${oldData.id}`, {
+                    method: "DELETE",
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  })
+                    .then((response) => {
+                      if (!response.ok) {
+                        handleSnackbar("Error deleting row", "error");
+                        throw new Error("Error deleting row");
+                      }
+                      else{
+                        handleSnackbar("URow deleted successfully", "success");
+                      }
+                      return response.json();
+                    })
+                    .catch((error) => {
+                      console.error("Error:", error);
+                      reject();
+                    });
                 }, 1000);
               }),
+            
           }}
         />
       </ThemeProvider>
+<Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleSnackbarClose}
+          severity={snackbar.severity}
+        >
+          {snackbar.message}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }
