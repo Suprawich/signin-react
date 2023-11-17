@@ -7,18 +7,16 @@ import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook for navigation
+import SignOut from './SignOut';
 
 export default function TemporaryDrawer() {
   const [state, setState] = React.useState({
-    top: false,
     left: false,
-    bottom: false,
-    right: false,
   });
+
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -28,6 +26,9 @@ export default function TemporaryDrawer() {
     setState({ ...state, [anchor]: open });
   };
 
+  const handleSignOut = () => {
+    <SignOut/>
+  }
   const list = (anchor) => (
     <Box
       sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
@@ -36,10 +37,9 @@ export default function TemporaryDrawer() {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {['จัดทำโดย'].map((text, index) => (
+        {['จัดทำโดย'].map((text) => (
           <ListItem key={text} disablePadding>
             <ListItemButton>
-              
               <ListItemText primary={text} />
             </ListItemButton>
           </ListItem>
@@ -47,13 +47,22 @@ export default function TemporaryDrawer() {
       </List>
       <Divider />
       <List>
-        {['กรกช วัฒนสมบัติ', 'สุประวิชญ์ สกุลโรมวิลาส', 'อัคริมา เพ็งอุบล', 'มานิดา พรสวรรค์วงษ์'].map((text, index) => (
+        {['กรกช วัฒนสมบัติ', 'สุประวิชญ์ สกุลโรมวิลาส', 'อัคริมา เพ็งอุบล', 'มานิดา พรสวรรค์วงษ์'].map((text) => (
           <ListItem key={text} disablePadding>
             <ListItemButton>
               <ListItemText primary={text} />
             </ListItemButton>
           </ListItem>
         ))}
+      </List>
+      <Divider />
+      <List>
+        {['']}
+        <ListItem key="SignOut" disablePadding>
+          <ListItemButton onClick={handleSignOut}>
+            <ListItemText primary="Sign Out" />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
@@ -63,11 +72,7 @@ export default function TemporaryDrawer() {
       <IconButton onClick={toggleDrawer('left', true)} edge="start" color="inherit" aria-label="menu">
         <MenuIcon />
       </IconButton>
-      <Drawer
-        anchor="left"
-        open={state['left']}
-        onClose={toggleDrawer('left', false)}
-      >
+      <Drawer anchor="left" open={state.left} onClose={toggleDrawer('left', false)}>
         {list('left')}
       </Drawer>
     </div>
