@@ -9,9 +9,6 @@ function SignOut() {
   useEffect(() => {
     // Remove the 'token' cookie
     removeCookie("token");
-
-    // Redirect to the sign-in page
-    navigate("/signin");
   }, [removeCookie, navigate]);
 
   return (

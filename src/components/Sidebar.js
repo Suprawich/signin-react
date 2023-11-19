@@ -27,7 +27,8 @@ export default function TemporaryDrawer() {
   };
 
   const handleSignOut = () => {
-    <SignOut/>
+    <SignOut />
+    navigate('/Signin');
   }
   const list = (anchor) => (
     <Box
