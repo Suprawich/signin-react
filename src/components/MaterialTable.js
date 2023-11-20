@@ -24,6 +24,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import momentTimezone from "moment-timezone";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import theme from "./Theme";
 
 function CustomMaterialTable({ props, props2 }) {
   const tableIcons = {
@@ -76,9 +77,9 @@ function CustomMaterialTable({ props, props2 }) {
 
   const [columns, setColumns] = useState([
     { title: "ID", field: "id", hidden: true },
-    { title: "Name", field: "name" },
+    { title: "กิจกรรม", field: "name" },
     {
-      title: "Date",
+      title: "วันที่",
       field: "when",
       hidden: false,
       render: (rowData) => {
@@ -132,7 +133,7 @@ function CustomMaterialTable({ props, props2 }) {
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
-      <ThemeProvider theme={defaultMaterialTheme}>
+      <ThemeProvider theme={theme}>
         <MaterialTable
           icons={tableIcons}
           title="Test Table"

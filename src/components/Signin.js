@@ -64,7 +64,7 @@ function SignIn() {
   });
 
   const [open, setOpen] = React.useState(false);
-  const [alertSeverity, setAlertSeverity] = React.useState("");
+  const [alertSeverity, setAlertSeverity] = React.useState("success");
 
   const handleClick = () => {
     setOpen(true);

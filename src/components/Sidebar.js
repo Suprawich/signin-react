@@ -12,9 +12,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate hook for n
 import SignOut from './SignOut';
 
 export default function TemporaryDrawer() {
-  const [state, setState] = React.useState({
-    left: false,
-  });
+  const [state, setState] = React.useState(false);
 
   const navigate = useNavigate(); // Initialize useNavigate hook
 
@@ -27,8 +25,8 @@ export default function TemporaryDrawer() {
   };
 
   const handleSignOut = () => {
-    <SignOut />
-    navigate('/Signin');
+
+    navigate('/signout');
   }
   const list = (anchor) => (
     <Box
@@ -38,28 +36,25 @@ export default function TemporaryDrawer() {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {['จัดทำโดย'].map((text) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemText primary={text} />
+        {['TODOWEB'].map((text) => (
+          <ListItem key={text} >
+              <ListItemText primary={'TODOWEB'} />
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        {['Main', 'Credit'].map((text) => (
+          <ListItem key={text} >
+            <ListItemButton href={text}>
+              <ListItemText primary={text}/>
             </ListItemButton>
           </ListItem>
         ))}
       </List>
       <Divider />
       <List>
-        {['กรกช วัฒนสมบัติ', 'สุประวิชญ์ สกุลโรมวิลาส', 'อัคริมา เพ็งอุบล', 'มานิดา พรสวรรค์วงษ์'].map((text) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['']}
-        <ListItem key="SignOut" disablePadding>
+        <ListItem key="SignOut" >
           <ListItemButton onClick={handleSignOut}>
             <ListItemText primary="Sign Out" />
           </ListItemButton>

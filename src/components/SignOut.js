@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
-import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 
 function SignOut() {
-  const [cookies, removeCookie] = useCookies(["token"]);
   const navigate = useNavigate();
 
   useEffect(() => {
     // Remove the 'token' cookie
-    removeCookie("token");
-  }, [removeCookie, navigate]);
+    localStorage.removeItem('token');
+    localStorage.removeItem('status')
+    navigate('/')
+  })
 
   return (
     <div>
